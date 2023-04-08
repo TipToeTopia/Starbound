@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private const float Y_AXIS_MOVEMENT = 0.0f;
-
     private const string HORIZONTAL_AXIS = "Horizontal";
     private const string VERTICAL_AXIS = "Vertical";
 
     [SerializeField]
     private float movementSpeed = 5.0f;
 
+    [SerializeField]
+    private CharacterController playerControls;
 
-    void Start()
-    {
-        
-    }
+    private Vector3 playerVelocity; 
+
+    private float playerGravity = -20.0f; 
 
     void Update()
     {
-        float HorizontalInput = Input.GetAxis(HORIZONTAL_AXIS);
-        float VerticalInput = Input.GetAxis(VERTICAL_AXIS);
+        float x = Input.GetAxis(HORIZONTAL_AXIS); 
+        float z = Input.GetAxis(VERTICAL_AXIS); 
 
-        Vector3 MovementDirection = new Vector3(HorizontalInput, Y_AXIS_MOVEMENT, VerticalInput);
-        MovementDirection.Normalize();
+        Vector3 move = (transform.right * x) + (transform.forward * z);
+        playerControls.Move(move * (movementSpeed * Time.deltaTime)); 
 
-        transform.Translate(MovementDirection * movementSpeed * Time.deltaTime, Space.World);
+        playerVelocity.y += playerGravity * Time.deltaTime; 
+        playerControls.Move(playerVelocity * Time.deltaTime); 
+
     }
 }
